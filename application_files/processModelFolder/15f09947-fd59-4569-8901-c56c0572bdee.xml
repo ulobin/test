@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<processModelFolderHaul xmlns:a="http://www.appian.com/ae/types/2009">
+    <versionUuid>da35a3ba-f73f-4396-92dc-3abc9f1e7cb8</versionUuid>
+    <processModelFolder>
+        <name>LU Models</name>
+        <uuid>15f09947-fd59-4569-8901-c56c0572bdee</uuid>
+        <description>Process models folder for the Lobin Sanbox application</description>
+    </processModelFolder>
+    <roleMap>
+        <role name="ADMIN_OWNER">
+            <users/>
+            <groups>
+                <groupUuid>dcba2d21-f87b-4b87-9649-ed2c810cc529</groupUuid>
+            </groups>
+        </role>
+        <role name="EDITOR">
+            <users/>
+            <groups/>
+        </role>
+        <role name="EXPLICIT_NONMEMBER">
+            <users/>
+            <groups/>
+        </role>
+        <role name="VIEWER">
+            <users/>
+            <groups>
+                <groupUuid>2a414cae-95a0-4884-8776-db6ab13dd6ad</groupUuid>
+            </groups>
+        </role>
+        <role name="MANAGER">
+            <users/>
+            <groups/>
+        </role>
+        <role name="INITIATOR">
+            <users/>
+            <groups/>
+        </role>
+    </roleMap>
+    <history>
+        <historyInfo versionUuid="da35a3ba-f73f-4396-92dc-3abc9f1e7cb8"/>
+    </history>
+</processModelFolderHaul>

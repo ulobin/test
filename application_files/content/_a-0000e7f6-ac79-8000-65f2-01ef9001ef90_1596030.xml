@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<contentHaul xmlns:a="http://www.appian.com/ae/types/2009">
+    <versionUuid>_a-0000e7f6-ac79-8000-65f2-01ef9001ef90_1596041</versionUuid>
+    <rule>
+        <name>LU_testInterface</name>
+        <uuid>_a-0000e7f6-ac79-8000-65f2-01ef9001ef90_1596030</uuid>
+        <description>To check the latest interface features</description>
+        <parentUuid>a76016c4-d452-41e4-8d88-0841d332e34a</parentUuid>
+        <visibility>
+            <advertise>false</advertise>
+            <hierarchy>true</hierarchy>
+            <indexable>true</indexable>
+            <quota>false</quota>
+            <searchable>true</searchable>
+            <system>false</system>
+            <unlogged>false</unlogged>
+        </visibility>
+        <definition>a!localVariables(
+  local!category,
+  local!searchTerm,
+  local!search: false,
+  local!favorites:
+  /* This variable would normally be retrieved with a rule like rule!getMyRecentHelpTopics(loggedinuser()). */
+  {
+    a!map(icon: "briefcase", title: "Request Time Off", linkUrl: ""),
+    a!map(icon: "user", title: "Karen Walton (Benefits Coordinator)", linkUrl: ""),
+    a!map(icon: "file", title: "401(k) Policy Updates", linkUrl: ""),
+    a!map(icon: "check-square", title: "Submit An IT Service Desk Case", linkUrl: "")
+  },
+  local!helpfulLinks:
+  /* This variable would normally be retrieved with a rule like rule!getPopularHelpTopics(). */
+  {
+    a!map(icon: "user", title: "Mischa Franklin (Facilities Manager)", linkUrl: ""),
+    a!map(icon: "money", title: "Submit Expense Report", linkUrl: ""),
+    a!map(icon: "check-square", title: "Submit An IT Service Desk Case", linkUrl: "", isNew: true),
+    a!map(icon: "external-link", title: "Time Management System", linkUrl: "")
+  },
+  #"SYSTEM_SYSRULES_headerContentLayout"(
+    header: #"SYSTEM_SYSRULES_billboardLayout_v1"(
+      backgroundMedia: #"SYSTEM_SYSRULES_documentImage"(
+        document: #"SYSTEM_SYSRULES_EXAMPLE_BILLBOARD_IMAGE"()
+      ),
+      marginBelow: "NONE",
+      overlay: #"SYSTEM_SYSRULES_barOverlay"(
+        contents: {
+          #"SYSTEM_SYSRULES_richTextDisplayField"(
+            labelPosition: "COLLAPSED",
+            value: {
+              #"SYSTEM_SYSRULES_richTextItem_v1"(text: {"Hello, " &amp; user(loggedinuser(), "firstName") &amp; "."}, size: "MEDIUM"),
+              char(10),
+              #"SYSTEM_SYSRULES_richTextItem_v1"(text: {"What do you need help with?"}, size: "LARGE")
+            },
+            align: "CENTER"
+          )
+        },
+        style: "DARK"
+      )
+    ),
+    contents: #"SYSTEM_SYSRULES_columnsLayout"(
+      columns: {
+        #"SYSTEM_SYSRULES_columnLayout"(
+          contents: {
+            /* If you haven't clicked on a card, show the search */
+            if(
+              isnull(local!category),
+              {
+                #"SYSTEM_SYSRULES_sideBySideLayout"(
+                  items: {
+                    #"SYSTEM_SYSRULES_sideBySideItem"(
+                      item: #"SYSTEM_SYSRULES_textField"(
+                        labelPosition: "COLLAPSED",
+                        placeholder: if(
+                          #"SYSTEM_SYSRULES_isPageWidth"("PHONE"),
+                          "Try “I have a laptop problem”",
+                          "Try “I have a laptop problem”, or “Tell me about tuition reimbursement”"
+                        ),
+                        value: local!searchTerm,
+                        saveInto: local!searchTerm
+                      )
+                    ),
+                    #"SYSTEM_SYSRULES_sideBySideItem"(
+                      item: #"SYSTEM_SYSRULES_ButtonArrayLayout"(
+                        buttons: {
+                          #"SYSTEM_SYSRULES_ButtonWidget"(
+                            icon: "search",
+                            /* The save here would use local!searchTerm to perform the search */
+                            saveInto: {a!save(local!search, true)},
+                            size: "SMALL",
+                            style: "NORMAL",
+                            accessibilityText: "Search"
+                          )
+                        },
+                        marginBelow: "NONE"
+                      ),
+                      width: "MINIMIZE"
+                    )
+                  },
+                  alignVertical: "MIDDLE",
+                  spacing: "DENSE"
+                ),
+                /* If you haven't searched, show the cards */
+                if(
+                  not(local!search),
+                  #"SYSTEM_SYSRULES_columnsLayout"(
+                    columns: {
+                      #"SYSTEM_SYSRULES_columnLayout"(
+                        contents: {
+                          #"SYSTEM_SYSRULES_cardLayout"(
+                            contents: #"SYSTEM_SYSRULES_richTextDisplayField"(
+                              value: {
+                                #"SYSTEM_SYSRULES_richTextIcon"(
+                                  icon: "money",
+                                  color: "ACCENT",
+                                  size: "LARGE"
+                                ),
+                                char(10),
+                                #"SYSTEM_SYSRULES_richTextItem_v1"(
+                                  text: {"Finance"},
+                                  size: "LARGE"
+                                ),
+                                char(10),
+                                #"SYSTEM_SYSRULES_richTextItem_v1"(
+                                  text: {"Payroll, retirement accounts"},
+                                  color: "SECONDARY"
+                                )
+                              },
+                              align: "CENTER"
+                            ),
+                            /* Setting this variable would be used to navigate to a category of answers */
+                            link: #"SYSTEM_SYSRULES_dynamicLink"(saveInto: a!save(local!category, "Finance")),
+                            height: "AUTO",
+                            marginBelow: "STANDARD"
+                          ),
+                          #"SYSTEM_SYSRULES_cardLayout"(
+                            contents: #"SYSTEM_SYSRULES_richTextDisplayField"(
+                              value: {
+                                #"SYSTEM_SYSRULES_richTextIcon"(
+                                  icon: "usd",
+                                  color: "ACCENT",
+                                  size: "LARGE"
+                                ),
+                                char(10),
+                                #"SYSTEM_SYSRULES_richTextItem_v1"(
+                                  text: {"Expenses"},
+                                  size: "LARGE"
+                                ),
+                                char(10),
+                                #"SYSTEM_SYSRULES_richTextItem_v1"(
+                                  text: {"Expense reports, reimbursement"},
+                                  color: "SECONDARY"
+                                )
+                              },
+                              align: "CENTER"
+                            ),
+                            /* Setting this variable would be used to navigate to a category of answers */
+                            link: #"SYSTEM_SYSRULES_dynamicLink"(saveInto: a!save(local!category, "Expenses")),
+                            height: "AUTO",
+                            marginBelow: "STANDARD"
+                          )
+                        }
+                      ),
+                      #"SYSTEM_SYSRULES_columnLayout"(
+                        contents: {
+                          #"SYSTEM_SYSRULES_cardLayout"(
+                            contents: #"SYSTEM_SYSRULES_richTextDisplayField"(
+                              value: {
+                                #"SYSTEM_SYSRULES_richTextIcon"(
+                                  icon: "building-o",
+                                  color: "ACCENT",
+                                  size: "LARGE"
+                                ),
+                                char(10),
+                                #"SYSTEM_SYSRULES_richTextItem_v1"(
+                                  text: {"Office"},
+                                  size: "LARGE"
+                                ),
+                                char(10),
+                                #"SYSTEM_SYSRULES_richTextItem_v1"(
+                                  text: {"Maintenance, supplies, snacks"},
+                                  color: "SECONDARY"
+                                )
+                              },
+                              align: "CENTER"
+                            ),
+                            /* Setting this variable would be used to navigate to a category of answers */
+                            link: #"SYSTEM_SYSRULES_dynamicLink"(saveInto: a!save(local!category, "Office")),
+                            height: "AUTO",
+                            marginBelow: "STANDARD"
+                          ),
+                          #"SYSTEM_SYSRULES_cardLayout"(
+                            contents: #"SYSTEM_SYSRULES_richTextDisplayField"(
+                              value: {
+                                #"SYSTEM_SYSRULES_richTextIcon"(
+                                  icon: "laptop",
+                                  color: "ACCENT",
+                                  size: "LARGE"
+                                ),
+                                char(10),
+                                #"SYSTEM_SYSRULES_richTextItem_v1"(
+                                  text: {"IT"},
+                                  size: "LARGE"
+                                ),
+                                char(10),
+                                #"SYSTEM_SYSRULES_richTextItem_v1"(
+                                  text: {"Hardware, software, network"},
+                                  color: "SECONDARY"
+                                )
+                              },
+                              align: "CENTER"
+                            ),
+                            /* Setting this variable would be used to navigate to a category of answers */
+                            link: #"SYSTEM_SYSRULES_dynamicLink"(saveInto: a!save(local!category, "IT")),
+                            height: "AUTO",
+                            marginBelow: "STANDARD"
+                          )
+                        }
+                      ),
+                      #"SYSTEM_SYSRULES_columnLayout"(
+                        contents: {
+                          #"SYSTEM_SYSRULES_cardLayout"(
+                            contents: #"SYSTEM_SYSRULES_richTextDisplayField"(
+                              value: {
+                                #"SYSTEM_SYSRULES_richTextIcon"(
+                                  icon: "calendar",
+                                  color: "ACCENT",
+                                  size: "LARGE"
+                                ),
+                                char(10),
+                                #"SYSTEM_SYSRULES_richTextItem_v1"(
+                                  text: {"Time"},
+                                  size: "LARGE"
+                                ),
+                                char(10),
+                                #"SYSTEM_SYSRULES_richTextItem_v1"(
+                                  text: {"Timesheets, PTO"},
+                                  color: "SECONDARY"
+                                )
+                              },
+                              align: "CENTER"
+                            ),
+                            /* Setting this variable would be used to navigate to a category of answers */
+                            link: #"SYSTEM_SYSRULES_dynamicLink"(saveInto: a!save(local!category, "Time")),
+                            height: "AUTO",
+                            marginBelow: "STANDARD"
+                          ),
+                          #"SYSTEM_SYSRULES_cardLayout"(
+                            contents: #"SYSTEM_SYSRULES_richTextDisplayField"(
+                              value: {
+                                #"SYSTEM_SYSRULES_richTextIcon"(
+                                  icon: "medkit",
+                                  color: "ACCENT",
+                                  size: "LARGE"
+                                ),
+                                char(10),
+                                #"SYSTEM_SYSRULES_richTextItem_v1"(
+                                  text: {"Benefits"},
+                                  size: "LARGE"
+                                ),
+                                char(10),
+                                #"SYSTEM_SYSRULES_richTextItem_v1"(
+                                  text: {"Insurance"},
+                                  color: "SECONDARY"
+                                )
+                              },
+                              align: "CENTER"
+                            ),
+                            /* Setting this variable would be used to navigate to a category of answers */
+                            link: #"SYSTEM_SYSRULES_dynamicLink"(saveInto: a!save(local!category, "Benefits")),
+                            height: "AUTO",
+                            marginBelow: "STANDARD"
+                          )
+                        }
+                      )
+                    }
+                  ),
+                  {
+                    #"SYSTEM_SYSRULES_richTextDisplayField"(
+                      labelPosition: "COLLAPSED",
+                      value: {
+                        #"SYSTEM_SYSRULES_richTextIcon"(
+                          icon: "long-arrow-left",
+                          link: #"SYSTEM_SYSRULES_dynamicLink"(saveInto: {
+                            a!save(local!search, false),
+                            a!save(local!searchTerm, ""),
+                            a!save(local!category, null)
+                          }),
+                          linkStyle: "STANDALONE"
+                        ),
+                        " ",
+                        #"SYSTEM_SYSRULES_richTextItem_v1"(
+                          text: {"Go Back"},
+                          link: #"SYSTEM_SYSRULES_dynamicLink"(saveInto: {
+                            a!save(local!search, false),
+                            a!save(local!searchTerm, ""),
+                            a!save(local!category, null)
+                          }),
+                          linkStyle: "STANDALONE"
+                        )
+                      }
+                    ),
+                    #"SYSTEM_SYSRULES_richTextDisplayField"(
+                      labelPosition: "COLLAPSED",
+                      value: {
+                        #"SYSTEM_SYSRULES_richTextItem_v1"(
+                          text: {"Search results would appear here for: " &amp; local!searchTerm},
+                          style: "EMPHASIS"
+                        )
+                      },
+                      align: "CENTER"
+                    )
+                  }
+                )
+              },
+              {
+                #"SYSTEM_SYSRULES_richTextDisplayField"(
+                  labelPosition: "COLLAPSED",
+                  value: {
+                    #"SYSTEM_SYSRULES_richTextItem_v1"(
+                      text: {"All Categories"},
+                      link: #"SYSTEM_SYSRULES_dynamicLink"(saveInto: {
+                        a!save(local!search, false),
+                        a!save(local!category, null)
+                      })
+                    ),
+                    " / ",
+                    local!category
+                  }
+                ),
+                #"SYSTEM_SYSRULES_richTextDisplayField"(
+                  labelPosition: "COLLAPSED",
+                  value: {
+                    #"SYSTEM_SYSRULES_richTextItem_v1"(
+                      text: {local!category &amp; " results would appear here"},
+                      style: "EMPHASIS"
+                    )
+                  },
+                  align: "CENTER"
+                )
+              }
+            )
+          },
+          width: "AUTO"
+        ),
+        #"SYSTEM_SYSRULES_columnLayout"(
+          contents: {
+            #"SYSTEM_SYSRULES_columnsLayout"(
+              columns: {
+                #"SYSTEM_SYSRULES_columnLayout"(
+                  contents: {
+                    #"SYSTEM_SYSRULES_boxLayout"(
+                      label: "Favorites",
+                      contents: {
+                        #"SYSTEM_SYSRULES_forEach"(
+                          items: local!favorites,
+                          expression: #"SYSTEM_SYSRULES_richTextDisplayField"(
+                            labelPosition: "COLLAPSED",
+                            value: {
+                              #"SYSTEM_SYSRULES_richTextIcon"(
+                                icon: fv!item.icon,
+                                color: "ACCENT"
+                              ),
+                              " ",
+                              #"SYSTEM_SYSRULES_richTextItem_v1"(
+                                text: {fv!item.title},
+                                link: #"SYSTEM_SYSRULES_dynamicLink"(),
+                                linkStyle: "STANDALONE"
+                              )
+                            }
+                          )
+                        )
+                      },
+                      style: "STANDARD",
+                      marginBelow: "STANDARD"
+                    )
+                  }
+                ),
+                #"SYSTEM_SYSRULES_columnLayout"(
+                  contents: {
+                    #"SYSTEM_SYSRULES_boxLayout"(
+                      label: "Helpful Links",
+                      contents: {
+                        #"SYSTEM_SYSRULES_forEach"(
+                          items: local!helpfulLinks,
+                          expression: if(
+                            fv!item.isNew,
+                            #"SYSTEM_SYSRULES_sideBySideLayout"(
+                              items: {
+                                #"SYSTEM_SYSRULES_sideBySideItem"(
+                                  item: #"SYSTEM_SYSRULES_richTextDisplayField"(
+                                    labelPosition: "COLLAPSED",
+                                    value: {
+                                      #"SYSTEM_SYSRULES_richTextIcon"(
+                                        icon: fv!item.icon,
+                                        color: "ACCENT"
+                                      ),
+                                      " ",
+                                      #"SYSTEM_SYSRULES_richTextItem_v1"(
+                                        text: {fv!item.title},
+                                        link: #"SYSTEM_SYSRULES_dynamicLink"(),
+                                        linkStyle: "STANDALONE"
+                                      )
+                                    }
+                                  )
+                                ),
+                                #"SYSTEM_SYSRULES_sideBySideItem"(
+                                  item: #"SYSTEM_SYSRULES_tagField"(
+                                    labelPosition: "COLLAPSED",
+                                    tags: {
+                                      #"SYSTEM_SYSRULES_tagItem"(
+                                        text: fn!upper("new"),
+                                        backgroundColor: "#4d822c"
+                                      )
+                                    },
+                                    size: "SMALL"
+                                  ),
+                                  width: "MINIMIZE"
+                                )
+                              },
+                              alignVertical: "MIDDLE"
+                            ),
+                            #"SYSTEM_SYSRULES_richTextDisplayField"(
+                              labelPosition: "COLLAPSED",
+                              value: {
+                                #"SYSTEM_SYSRULES_richTextIcon"(
+                                  icon: fv!item.icon,
+                                  color: "ACCENT"
+                                ),
+                                " ",
+                                #"SYSTEM_SYSRULES_richTextItem_v1"(
+                                  text: {fv!item.title},
+                                  link: #"SYSTEM_SYSRULES_dynamicLink"(),
+                                  linkStyle: "STANDALONE"
+                                )
+                              }
+                            )
+                          )
+                        )
+                      },
+                      style: "STANDARD",
+                      marginBelow: "STANDARD"
+                    )
+                  }
+                )
+              },
+              stackWhen: {
+                "PHONE",
+                "TABLET_PORTRAIT",
+                "DESKTOP",
+                "DESKTOP_WIDE"
+              }
+            )
+          },
+          width: "MEDIUM"
+        )
+      },
+      stackWhen: {
+        "PHONE",
+        "TABLET_PORTRAIT",
+        "TABLET_LANDSCAPE",
+        "DESKTOP_NARROW"
+      }
+    )
+  )
+)</definition>
+        <preferredEditor>interface</preferredEditor>
+        <offlineEnabled>false</offlineEnabled>
+    </rule>
+    <roleMap public="true">
+        <role inherit="true" allowForAll="false" name="readers">
+            <users/>
+            <groups/>
+        </role>
+        <role inherit="true" allowForAll="false" name="authors">
+            <users/>
+            <groups/>
+        </role>
+        <role inherit="true" allowForAll="false" name="administrators">
+            <users/>
+            <groups/>
+        </role>
+        <role inherit="false" allowForAll="false" name="denyReaders">
+            <users/>
+            <groups/>
+        </role>
+        <role inherit="false" allowForAll="false" name="denyAuthors">
+            <users/>
+            <groups/>
+        </role>
+        <role inherit="false" allowForAll="false" name="denyAdministrators">
+            <users/>
+            <groups/>
+        </role>
+    </roleMap>
+    <history>
+        <historyInfo versionUuid="_a-0000e7f6-ac79-8000-65f2-01ef9001ef90_1596041"/>
+    </history>
+</contentHaul>
